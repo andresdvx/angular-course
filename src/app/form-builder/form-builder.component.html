@@ -1,0 +1,249 @@
+<p-toast></p-toast>
+
+<div class="p-fluid">
+  <!-- Encabezado del formulario -->
+  <div class="p-grid p-mb-6">
+    <div class="p-col-12 p-md-8">
+      <input
+        type="text"
+        [(ngModel)]="formTitle"
+        pInputText
+        placeholder="Form Title"
+        class="p-mr-2"
+      />
+    </div>
+    <div class="p-col-12 p-md-4 p-d-flex p-jc-end">
+      <button
+        pButton
+        type="button"
+        label="Save Form"
+        icon="pi pi-save"
+        (click)="showSaveDialog = true"
+        class="p-mr-2"
+      ></button>
+      <p-fileUpload
+        mode="basic"
+        chooseLabel="Load Form"
+        accept=".json"
+        (onSelect)="loadFormConfig($event)"
+        class="p-mr-2"
+      ></p-fileUpload>
+      <button
+        pButton
+        type="button"
+        label="Export Code"
+        icon="pi pi-code"
+      ></button>
+    </div>
+  </div>
+
+  <!-- Descripción y nombre del archivo -->
+  <div class="p-grid p-mb-6">
+    <div class="p-col-12 p-md-6">
+      <input
+        type="text"
+        [(ngModel)]="formDescription"
+        pInputText
+        placeholder="Form Description"
+      />
+    </div>
+    <div class="p-col-12 p-md-6 p-d-flex p-ai-center">
+      <span class="p-input-icon-left">
+        <i class="pi pi-file"></i>
+        <input
+          type="text"
+          [(ngModel)]="formFileName"
+          pInputText
+          placeholder="filename"
+        />
+      </span>
+      <span class="p-ml-2">.json</span>
+    </div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="p-grid">
+    <!-- Sidebar con elementos arrastrables -->
+    <div class="p-col-12 p-md-3">
+      <p-card header="Form Elements" subheader="Drag elements to the canvas">
+        <div
+          *ngFor="let type of ['input', 'select', 'checkbox', 'radio']"
+          draggable
+          (dragstart)="handleDragStart($event, 'input')"
+          class="p-d-flex p-ai-center p-p-3 p-mb-2 p-shadow-1 p-cursor-pointer"
+        >
+          <i class="pi pi-plus p-mr-2"></i>
+          <span>{{ type | titlecase }}</span>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Canvas y propiedades -->
+    <div class="p-col-12 p-md-9">
+      <p-tabView>
+        <!-- Pestaña del Canvas -->
+        <p-tabPanel header="Canvas">
+          <div
+            class="p-d-flex p-flex-column p-ai-center p-jc-center p-p-4 p-shadow-2"
+            (drop)="handleDrop($event)"
+            (dragover)="handleDragOver($event)"
+            [ngClass]="{
+              'p-drag-over': draggedElement !== null,
+              'p-drag-over-active': dragOverElement !== null
+            }"
+          >
+            <div *ngIf="formElements.length === 0" class="p-text-center">
+              <p class="p-text-secondary">Drag form elements here</p>
+              <p class="p-text-secondary p-mt-2">or</p>
+              <button pButton type="button" label="Add Element" class="p-mt-2"></button>
+            </div>
+            <div *ngIf="formElements.length > 0" class="p-grid p-fluid">
+              <div
+                *ngFor="let element of formElements"
+                [ngClass]="'p-col-' + element.position.width"
+                class="p-shadow-1 p-p-3 p-mb-3"
+                (click)="activeElement = element.id"
+                draggable
+                (dragstart)="handleElementDragStart($event, element.id)"
+                (dragover)="handleElementDragOver($event, element.id)"
+                (dragleave)="handleElementDragLeave()"
+                (drop)="handleElementDrop($event, element.id)"
+              >
+                <div class="p-d-flex p-ai-center p-jc-between p-mb-2">
+                  <div class="p-d-flex p-ai-center">
+                    <i class="pi pi-bars p-mr-2 p-cursor-move"></i>
+                    <span class="p-text-bold">{{ element.label }}</span>
+                  </div>
+                  <div class="p-d-flex p-ai-center">
+                    <p-dropdown
+                      [options]="[1, 2, 3, 4, 6, 12]"
+                      [(ngModel)]="element.position.width"
+                      (onChange)="updateElementWidth(element.id, $event.value)"
+                      placeholder="Width"
+                      class="p-mr-2"
+                    ></p-dropdown>
+                    <button
+                      pButton
+                      type="button"
+                      icon="pi pi-trash"
+                      class="p-button-danger"
+                      (click)="deleteElement(element.id)"
+                    ></button>
+                  </div>
+                </div>
+                <div *ngIf="element.type === 'input'">
+                  <label>{{ element.label }}</label>
+                  <input
+                    pInputText
+                    [placeholder]="element.placeholder"
+                    disabled
+                  />
+                </div>
+                <div *ngIf="element.type === 'select'">
+                  <label>{{ element.label }}</label>
+                  <p-dropdown
+                    [options]="element.options"
+                    placeholder="Select an option"
+                    [disabled]="true"
+                  ></p-dropdown>
+                </div>
+                <div *ngIf="element.type === 'checkbox'">
+                  <p-checkbox
+                    [binary]="true"
+                    disabled
+                  ></p-checkbox>
+                </div>
+                <div *ngIf="element.type === 'radio'">
+                  <label>{{ element.label }}</label>
+                  <div *ngFor="let option of element.options">
+                    <p-radioButton
+                      name="radioGroup"
+                      disabled
+                    ></p-radioButton>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Pestaña de Vista Previa -->
+        <p-tabPanel header="Preview">
+          <p-card [header]="formTitle" [subheader]="formDescription">
+            <form (ngSubmit)="handleFormSubmit($event)" class="p-fluid">
+              <div class="p-grid">
+                <div
+                  *ngFor="let element of formElements"
+                  [ngClass]="'p-col-' + element.position.width"
+                  class="p-mb-3"
+                >
+                  <div *ngIf="element.type === 'input'">
+                    <label>{{ element.label }}</label>
+                    <input
+                      pInputText
+                      [placeholder]="element.placeholder"
+                      [required]="element.required"
+                    />
+                  </div>
+                  <div *ngIf="element.type === 'select'">
+                    <label>{{ element.label }}</label>
+                    <p-dropdown
+                      [options]="element.options"
+                      placeholder="Select an option"
+                      [required]="element.required"
+                    ></p-dropdown>
+                  </div>
+                  <div *ngIf="element.type === 'checkbox'">
+                    <p-checkbox
+                      [binary]="true"
+                      [required]="element.required"
+                    ></p-checkbox>
+                  </div>
+                  <div *ngIf="element.type === 'radio'">
+                    <label>{{ element.label }}</label>
+                    <div *ngFor="let option of element.options">
+                      <p-radioButton
+                        name="radioGroup"
+                      ></p-radioButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button pButton type="submit" label="Submit"></button>
+            </form>
+          </p-card>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+</div>
+
+<!-- Diálogo para guardar el formulario -->
+<p-dialog
+  [(visible)]="showSaveDialog"
+  header="Save Form"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+>
+  <p>You are about to save the form configuration as:</p>
+  <p class="p-text-bold">
+    <i class="pi pi-file p-mr-2"></i>{{ formFileName }}.json
+  </p>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      type="button"
+      label="Cancel"
+      icon="pi pi-times"
+      (click)="showSaveDialog = false"
+      class="p-button-text"
+    ></button>
+    <button
+      pButton
+      type="button"
+      label="Save"
+      icon="pi pi-check"
+      (click)="saveFormConfig()"
+    ></button>
+  </ng-template>
+</p-dialog>
