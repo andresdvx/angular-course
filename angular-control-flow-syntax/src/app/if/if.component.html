@@ -1,5 +1,15 @@
 <p>if works!</p>
 
-<p *ngIf="isVisible; else elseBlock">Es Visible</p>
+<!-- Prev Control Flow Syntax -->
 
-<ng-template #elseBlock>No Visible</ng-template>
+<!-- <p *ngIf="isVisible; else elseBlock">Es Visible</p>
+
+<ng-template #elseBlock>No Visible</ng-template> -->
+
+<!-- New Control Flow Syntax -->
+
+@if(isVisible){
+<span>Visible</span>
+} @else {
+<span>No Visible</span>
+}
