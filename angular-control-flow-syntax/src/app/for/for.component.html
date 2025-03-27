@@ -1,0 +1,18 @@
+<p>for component starts!</p>
+
+<!-- Prev Control Flow Syntax -->
+
+<!-- <ul>
+  <li *ngFor="let name of names">{{ name }}</li>
+</ul> -->
+
+<!-- New Control Flow Syntax -->
+<ul>
+  @for(name of names; track name){
+  <li>{{ name }}</li>
+  } @empty {
+  <li>No names found!</li>
+  }
+</ul>
+
+<p>for component ends!</p>
