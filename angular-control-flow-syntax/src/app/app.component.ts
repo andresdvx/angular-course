@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { IfComponent } from './if/if.component';
-import { ForComponent } from './for/for.component';
+import { DeferComponent } from './defer/defer.component';
+import { LoadingComponent } from './loading/loading.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, IfComponent, ForComponent],
+  imports: [DeferComponent, LoadingComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
