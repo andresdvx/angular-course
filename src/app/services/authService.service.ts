@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Component, Inject, Injectable } from '@angular/core';
 
 // providedIn = 'root' => Angular creates a single, shared instance of the service and injects into any class that asks for it
 // Angular will inject the same instance of the service into every class that requires it
@@ -20,4 +20,14 @@ export class AuthService {
   login() {
     console.info('login');
   }
+}
+
+// service by component
+@Component({
+    selector: 'app-root',
+    template: '<p>app-root service</p>',
+    providers: [AppRootService]
+})
+export class AppRootService{
+    AppRootService = Inject(AppRootService);
 }
