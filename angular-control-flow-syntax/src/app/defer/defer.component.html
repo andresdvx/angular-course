@@ -1,0 +1,32 @@
+<p>Defer starts!</p>
+
+@defer(when isImageVisible){
+<img
+  class="img_defered"
+  src="https://i.pinimg.com/736x/bc/b9/a0/bcb9a0f5860c7479c37bc5fa9ab1820f.jpg"
+  alt="img"
+/>
+} 
+
+@if(!isImageVisible){
+<button (click)="showImage()">Show Image</button>
+}
+
+<!-- With PlaceHolder -->
+ <span>With PlaceHolder</span>
+
+@defer(when isImageVisibleWithDelay){
+  <img
+  class="img_defered"
+  src="https://i.pinimg.com/736x/bc/b9/a0/bcb9a0f5860c7479c37bc5fa9ab1820f.jpg"
+  alt="img"
+/>
+}@placeholder {
+  <span>Image is not still loaded...</span>
+}
+
+@if(!isImageVisibleWithDelay){
+<button (click)="showImageWithDelay()">Show Image with delay</button>
+}
+
+<p>Defer ends!</p>
