@@ -1,0 +1,33 @@
+<p>switch starts!</p>
+
+<!-- Prev Way  -->
+
+<!-- [ngSwitch] => eval option -->
+
+<!-- *ngSwitchCase => what will be displayed if value matches -->
+
+<!-- *ngSwitchDefault => when value not matches with any other values -->
+
+<!-- <div [ngSwitch]="selectedValue">
+ <p *ngSwitchCase="'option 1'">Opción 1 </p>
+ <p *ngSwitchCase="'option 2'">Opción 2 </p>
+ <p *ngSwitchCase="'option 3'">Opción 3 </p>
+ <p *ngSwitchDefault="">Opción por defecto</p>
+</div> -->
+
+<!-- New Way -->
+
+@switch(selectedValue){
+    @case ('option 1') {
+        <p> option one</p>
+    }
+    @case('option 2') {
+        <p> option two</p>
+    }
+    @case('option 3') {
+        <p> option three</p>
+    }
+    @default {
+        <p> default option</p>
+    }
+}
