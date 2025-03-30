@@ -1,0 +1,14 @@
+<h3>Data Ready</h3>
+
+@defer(when dataReady){
+<p>data have been loaded</p>
+}@placeholder {
+<p>while data is not available</p>
+}
+
+<!-- this works for infiniti scroll -->
+@defer(on viewport){
+    <p>si compa</p>
+}@placeholder {
+<p>while data is not available</p>
+}
