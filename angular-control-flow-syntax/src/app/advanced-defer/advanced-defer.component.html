@@ -6,9 +6,54 @@
 <p>while data is not available</p>
 }
 
-<!-- this works for infiniti scroll -->
+<!-- this works for infinity scroll -->
 @defer(on viewport){
-    <p>si compa</p>
+<p>si compa</p>
 }@placeholder {
 <p>while data is not available</p>
+}
+
+<!-- With a trigger element -->
+<h3>Trigger</h3>
+
+<div #triggerElement>Trigger Element</div>
+
+@defer(on viewport(triggerElement)){
+<p>Cargado cuando trigger element cargue en el DOM</p>
+}@placeholder {
+<p>Placeholder</p>
+}
+
+<h3>Interaction</h3>
+
+@defer(on interaction){
+<p>Content loaded after interaction</p>
+}@placeholder {
+<p>Waiting for interaction...</p>
+}
+
+<h3>Hover</h3>
+
+@defer(on hover){
+<p>On Hover loaded</p>
+}@placeholder {
+<div>on hover no loaded</div>
+}
+
+<h3>hover with another element</h3>
+
+<div #hoverElement>Hover Me</div>
+
+@defer(on hover(hoverElement)){
+<p>On Hover loaded</p>
+}@placeholder {
+<div>on hover no loaded</div>
+}
+
+<h3>Timer</h3>
+
+@defer(on timer(500)){
+<div>Loaded after 500 ms</div>
+}@placeholder {
+<div>Waiting for timer...</div>
 }
