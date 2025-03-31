@@ -1,9 +1,8 @@
-import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-advanced-defer',
-  imports: [NgFor],
+  imports: [],
   templateUrl: './advanced-defer.component.html',
   styleUrl: './advanced-defer.component.scss'
 })
