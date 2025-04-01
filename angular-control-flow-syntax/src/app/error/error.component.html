@@ -1,0 +1,11 @@
+<p>error works!</p>
+
+@defer (when contentIsReady) {
+<p>content is ready</p>
+}@loading(after 200ms; minimum 1s) {
+<p>Loading content...</p>
+}@placeholder {
+<p>While content is not ready to be loaded</p>
+}@error {
+<p>There was an error loading the content</p>
+}
