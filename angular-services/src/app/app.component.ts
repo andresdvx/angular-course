@@ -1,7 +1,13 @@
-import { Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  Signal,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Character } from './models/character.model';
 import { CharacterService } from './services/index';
+import { Character } from './models';
 
 @Component({
   selector: 'app-root',
@@ -9,15 +15,12 @@ import { CharacterService } from './services/index';
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   title = 'angular-services';
-  protected characters: Character[] = [];
   protected characterService = inject(CharacterService);
-
-  constructor() {
-    this.characterService
-      .getCharacteres()
-      .subscribe((character) => (this.characters = character));
-  }
+  protected characters: Signal<Character[] | undefined> = computed(() =>
+    this.characterService.getFormatedCharacteres()
+  );
 }
